@@ -17,7 +17,7 @@ description="Addon to Cyberware: Reforged that adds overhauled aesthetics with h
 [[dependencies.cyberwareplus]]
 modId="dglib"
 mandatory=true
-versionRange="1.0_alpha"
+versionRange="[1.0_alpha]"
 ordering="NONE"
 side="BOTH"
 
