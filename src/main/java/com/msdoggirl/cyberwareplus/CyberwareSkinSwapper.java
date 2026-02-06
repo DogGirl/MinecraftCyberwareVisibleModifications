@@ -4,6 +4,9 @@ import com.maxwell.cyber_ware_port.common.capability.CyberwareCapabilityProvider
 import com.maxwell.cyber_ware_port.init.ModItems;
 import com.msdoggirl.cyberwareplus.SyncCyberwareC2S;
 import com.msdoggirl.cyberwareplus.NetworkHandler;     // your custom one
+import com.msdoggirl.dglib.api.SkinGlowLayerAPI;
+import com.msdoggirl.dglib.api.SkinSwapperAPI;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.PacketDistributor;
 
 import net.minecraft.client.Minecraft;
@@ -23,6 +26,9 @@ public class CyberwareSkinSwapper {
 
     private static final String TEXTURE_PATH = "textures/skins/test_skin.png";
     private static final String TEXTURE_PATH_LIMBLESS = "textures/skins/empty.png";
+    private static final String TEXTURE_PATH_GLOW = "textures/skins/cyber_glow.png";
+
+    private static ResourceLocation GLOW_TEXTURE = new ResourceLocation("cyberwareplus", TEXTURE_PATH_GLOW);
 
     private static boolean skinUpdated = false;
     private static boolean reChecked = false;
@@ -91,14 +97,12 @@ public class CyberwareSkinSwapper {
             previousLevel = null;
             reChecked = false;
             wasReloaded = false;
-            SkinSwapper.cleanup();
             ClientCyberwareData.clear();
             //System.out.println("[Cyberware+] World Unloaded.");
             return;
         } else if (mc.level != previousLevel) {
             //System.out.println("[Cyberware+] Level Changed. Reloading.");
             previousLevel = mc.level;
-            SkinSwapper.cleanup();
             previousStates.clear();
             wasReloaded = true;
         }
@@ -106,7 +110,6 @@ public class CyberwareSkinSwapper {
         if (!reChecked) {
             tickCounter2++;
             if (tickCounter2 > 400 && wasReloaded) {
-                SkinSwapper.cleanup();
                 previousStates.clear();
                 tickCounter2 = 0;
                 reChecked = true;
@@ -120,6 +123,7 @@ tickCounter++;
 
         boolean localUpdated = false;
 
+
         AbstractClientPlayer localPlayer = mc.player;
 
         for (AbstractClientPlayer player : mc.level.players()) {
@@ -127,9 +131,11 @@ tickCounter++;
             UUID uuid = player.getUUID();
             CyberwareSkinSwapper.PlayerVisualState newState = ClientCyberwareData.getState(uuid); // Changed: Use synced data or local capability
 
+
             CyberwareSkinSwapper.PlayerVisualState oldState = previousStates.get(uuid);
             if (oldState == null || !oldState.equals(newState)) {
                 applyVisualState(uuid, newState);
+                if(player == localPlayer) applyGlowVisualState(copyState(newState));
                 previousStates.put(uuid, copyState(newState)); // Added: Use copy to avoid reference issues
                 if (uuid.equals(mc.player.getUUID())) {
                     localUpdated = true;
@@ -147,53 +153,104 @@ tickCounter++;
     private static void applyVisualState(UUID uuid, PlayerVisualState state) {
         // Eye
         if (state.cyberEye && !state.syntheticSkin) {
-            SkinSwapper.enableHeadOverlay(uuid, TEXTURE_PATH);
+            SkinSwapperAPI.enableHeadOverlay(uuid, TEXTURE_PATH);
         } else {
-            SkinSwapper.disableHeadOverlay(uuid);
+            SkinSwapperAPI.disableHeadOverlay(uuid);
         }
 
         // Heart
         if (state.cyberHeart && !state.syntheticSkin) {
-            SkinSwapper.enableBodyOverlay(uuid, TEXTURE_PATH);
+            SkinSwapperAPI.enableBodyOverlay(uuid, TEXTURE_PATH);
         } else {
-            SkinSwapper.disableBodyOverlay(uuid);
+            SkinSwapperAPI.disableBodyOverlay(uuid);
         }
 
         // Right Arm
         if (state.humanRightArm || (state.cyberRightArm && state.syntheticSkin)) {
-            SkinSwapper.disableRightArm(uuid);
+            SkinSwapperAPI.disableRightArm(uuid);
         } else if (state.cyberRightArm && !state.syntheticSkin) {
-            SkinSwapper.enableRightArm(uuid, TEXTURE_PATH);
+            SkinSwapperAPI.enableRightArm(uuid, TEXTURE_PATH);
         } else {
-            SkinSwapper.enableRightArm(uuid, TEXTURE_PATH_LIMBLESS);
+            SkinSwapperAPI.enableRightArm(uuid, TEXTURE_PATH_LIMBLESS);
         }
 
         // Left Arm
         if (state.humanLeftArm || (state.cyberLeftArm && state.syntheticSkin)) {
-            SkinSwapper.disableLeftArm(uuid);
+            SkinSwapperAPI.disableLeftArm(uuid);
         } else if (state.cyberLeftArm && !state.syntheticSkin) {
-            System.out.println(uuid);
-            SkinSwapper.enableLeftArm(uuid, TEXTURE_PATH);
+            SkinSwapperAPI.enableLeftArm(uuid, TEXTURE_PATH);
         } else {
-            SkinSwapper.enableLeftArm(uuid, TEXTURE_PATH_LIMBLESS);
+            SkinSwapperAPI.enableLeftArm(uuid, TEXTURE_PATH_LIMBLESS);
         }
 
         // Right Leg
         if (state.humanRightLeg || (state.cyberRightLeg && state.syntheticSkin)) {
-            SkinSwapper.disableRightLeg(uuid);
+            SkinSwapperAPI.disableRightLeg(uuid);
         } else if (state.cyberRightLeg && !state.syntheticSkin) {
-            SkinSwapper.enableRightLeg(uuid, TEXTURE_PATH);
+            SkinSwapperAPI.enableRightLeg(uuid, TEXTURE_PATH);
         } else {
-            SkinSwapper.enableRightLeg(uuid, TEXTURE_PATH_LIMBLESS);
+            SkinSwapperAPI.enableRightLeg(uuid, TEXTURE_PATH_LIMBLESS);
         }
 
         // Left Leg
         if (state.humanLeftLeg || (state.cyberLeftLeg && state.syntheticSkin)) {
-            SkinSwapper.disableLeftLeg(uuid);
+            SkinSwapperAPI.disableLeftLeg(uuid);
         } else if (state.cyberLeftLeg && !state.syntheticSkin) {
-            SkinSwapper.enableLeftLeg(uuid, TEXTURE_PATH);
+            SkinSwapperAPI.enableLeftLeg(uuid, TEXTURE_PATH);
         } else {
-            SkinSwapper.enableLeftLeg(uuid, TEXTURE_PATH_LIMBLESS);
+            SkinSwapperAPI.enableLeftLeg(uuid, TEXTURE_PATH_LIMBLESS);
+        }
+    }
+
+    private static void applyGlowVisualState(PlayerVisualState state) {
+        // Eye
+        if (state.cyberEye && !state.syntheticSkin) {
+            SkinGlowLayerAPI.setHeadGlow(GLOW_TEXTURE, true);
+        } else {
+            SkinGlowLayerAPI.setHeadGlow(GLOW_TEXTURE, false);
+        }
+
+        // Heart
+        if (state.cyberHeart && !state.syntheticSkin) {
+            SkinGlowLayerAPI.setBodyGlow(GLOW_TEXTURE, true);
+        } else {
+            SkinGlowLayerAPI.setBodyGlow(GLOW_TEXTURE, false);
+        }
+
+        // Right Arm
+        if (state.humanRightArm || (state.cyberRightArm && state.syntheticSkin)) {
+            SkinGlowLayerAPI.setRightArmGlow(GLOW_TEXTURE, false);
+        } else if (state.cyberRightArm && !state.syntheticSkin) {
+            SkinGlowLayerAPI.setRightArmGlow(GLOW_TEXTURE, true);
+        } else {
+            SkinGlowLayerAPI.setRightArmGlow(GLOW_TEXTURE, true);
+        }
+
+        // Left Arm
+        if (state.humanLeftArm || (state.cyberLeftArm && state.syntheticSkin)) {
+            SkinGlowLayerAPI.setLeftArmGlow(GLOW_TEXTURE, false);
+        } else if (state.cyberLeftArm && !state.syntheticSkin) {
+            SkinGlowLayerAPI.setLeftArmGlow(GLOW_TEXTURE, true);
+        } else {
+            SkinGlowLayerAPI.setLeftArmGlow(GLOW_TEXTURE, true);
+        }
+
+        // Right Leg
+        if (state.humanRightLeg || (state.cyberRightLeg && state.syntheticSkin)) {
+            SkinGlowLayerAPI.setRightLegGlow(GLOW_TEXTURE, false);
+        } else if (state.cyberRightLeg && !state.syntheticSkin) {
+            SkinGlowLayerAPI.setRightLegGlow(GLOW_TEXTURE, true);
+        } else {
+            SkinGlowLayerAPI.setRightLegGlow(GLOW_TEXTURE, true);
+        }
+
+        // Left Leg
+        if (state.humanLeftLeg || (state.cyberLeftLeg && state.syntheticSkin)) {
+            SkinGlowLayerAPI.setLeftLegGlow(GLOW_TEXTURE, false);
+        } else if (state.cyberLeftLeg && !state.syntheticSkin) {
+            SkinGlowLayerAPI.setLeftLegGlow(GLOW_TEXTURE, true);
+        } else {
+            SkinGlowLayerAPI.setLeftLegGlow(GLOW_TEXTURE, true);
         }
     }
 

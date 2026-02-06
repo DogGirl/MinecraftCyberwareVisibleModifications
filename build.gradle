@@ -46,7 +46,7 @@ minecraft {
         }
         data {
             workingDirectory project.file('run')
-            args '--mod', 'seven_systems', '--all',
+            args '--mod', 'cyberwareplus', '--all',
                  '--output', file('src/generated/resources/'),
                  '--existing', file('src/main/resources/')
             mods { cyberwareplus { source sourceSets.main } }
@@ -66,6 +66,7 @@ dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     implementation fg.deobf("curse.maven:cyberware-reforged-1401640:7468938")
     implementation fg.deobf("curse.maven:epic-fight-mod-405076:7213635")
+    implementation fg.deobf("curse.maven:dglib-1452161:7566434")
 }
 
 

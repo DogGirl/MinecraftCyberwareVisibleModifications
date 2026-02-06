@@ -1,7 +1,6 @@
 
 package com.msdoggirl.cyberwareplus;
 
-import com.msdoggirl.cyberwareplus.ClientModEvents;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.common.Mod;
@@ -24,7 +23,6 @@ public class CyberwareplusMod {
         if (FMLLoader.getDist() == Dist.CLIENT) {
 
             net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener(CyberwareSkinSwapper::onClientTick);
-            net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener(ClientModEvents::onClientTick);
             NetworkHandler.init();
         
         }
