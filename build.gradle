@@ -66,7 +66,7 @@ dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     implementation fg.deobf("curse.maven:cyberware-reforged-1401640:7468938")
     implementation fg.deobf("curse.maven:epic-fight-mod-405076:7213635")
-    implementation fg.deobf("curse.maven:dglib-1452161:7566434")
+    implementation fg.deobf("curse.maven:dglib-1452161:7613259")
 }
 
 
