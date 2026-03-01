@@ -1,11 +1,13 @@
 modLoader="javafml"
 loaderVersion="[47,)"
-license="CC-BY-NC-SA-4.0"
+license="Attribution-NonCommercial-ShareAlike 4.0 International"
 [[mods]]
 modId="cyberwareplus"
-version="1.1"
+version="1.3"
 displayName="Cyberware Plus"
 authors="msdoggirl"
+description="Addon to Cyberware: Reforged that adds overhauled aesthetics with high mod compatibility."
+side="BOTH"
 [[dependencies.cyberwareplus]]
     modId="forge"
     mandatory=true
@@ -14,11 +16,19 @@ authors="msdoggirl"
     side="BOTH"
 
 [[dependencies.cyberwareplus]]
-modId="dglib"
+modId="cyber_ware_port"
 mandatory=true
-versionRange="1.0_alpha"
+versionRange="[1.5,)"
 ordering="NONE"
 side="BOTH"
+
+[[dependencies.cyberwareplus]]
+modId="dglib"
+mandatory=true
+versionRange="[1.1_alpha,)"
+ordering="NONE"
+side="BOTH"
+
 
 [[mixins]]
 config="mixins.cyberwareplus.json"

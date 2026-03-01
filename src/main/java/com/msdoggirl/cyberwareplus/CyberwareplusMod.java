@@ -18,12 +18,11 @@ public class CyberwareplusMod {
         net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener(ServerEvents::onPlayerLogout);
         net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener(ServerEvents::onStartTracking);
         net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener(ServerEvents::onPlayerLoggedIn);
-
+        NetworkHandler.init();
 
         if (FMLLoader.getDist() == Dist.CLIENT) {
 
             net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener(CyberwareSkinSwapper::onClientTick);
-            NetworkHandler.init();
         
         }
     }
