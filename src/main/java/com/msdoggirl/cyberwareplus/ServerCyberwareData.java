@@ -39,6 +39,8 @@ public class ServerCyberwareData {
         copy.cyberLeftArm = original.cyberLeftArm;
         copy.cyberRightLeg = original.cyberRightLeg;
         copy.cyberLeftLeg = original.cyberLeftLeg;
+        copy.eyeCount = original.eyeCount;
+        copy.eyeHeight = original.eyeHeight;
         return copy;
     }
 }

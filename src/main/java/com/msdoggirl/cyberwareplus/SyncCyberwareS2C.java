@@ -20,10 +20,12 @@ public class SyncCyberwareS2C {
     public final boolean cyberLeftArm;
     public final boolean cyberRightLeg;
     public final boolean cyberLeftLeg;
+    public final int eyeCount;
+    public final int eyeHeight;
 
     public SyncCyberwareS2C(UUID playerId, boolean syntheticSkin, boolean cyberEye, boolean cyberHeart,
                             boolean humanRightArm, boolean humanLeftArm, boolean humanRightLeg, boolean humanLeftLeg,
-                            boolean cyberRightArm, boolean cyberLeftArm, boolean cyberRightLeg, boolean cyberLeftLeg) {
+                            boolean cyberRightArm, boolean cyberLeftArm, boolean cyberRightLeg, boolean cyberLeftLeg, int eyeCount, int eyeHeight) {
         this.playerId = playerId;
         this.syntheticSkin = syntheticSkin;
         this.cyberEye = cyberEye;
@@ -36,6 +38,8 @@ public class SyncCyberwareS2C {
         this.cyberLeftArm = cyberLeftArm;
         this.cyberRightLeg = cyberRightLeg;
         this.cyberLeftLeg = cyberLeftLeg;
+        this.eyeCount = eyeCount;
+        this.eyeHeight = eyeHeight;
     }
 
     public static void encode(SyncCyberwareS2C msg, FriendlyByteBuf buf) {
@@ -51,6 +55,8 @@ public class SyncCyberwareS2C {
         buf.writeBoolean(msg.cyberLeftArm);
         buf.writeBoolean(msg.cyberRightLeg);
         buf.writeBoolean(msg.cyberLeftLeg);
+        buf.writeInt(msg.eyeCount);
+        buf.writeInt(msg.eyeHeight);
     }
 
     public static SyncCyberwareS2C decode(FriendlyByteBuf buf) {
@@ -58,7 +64,7 @@ public class SyncCyberwareS2C {
                 buf.readUUID(),
                 buf.readBoolean(), buf.readBoolean(), buf.readBoolean(),
                 buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(),
-                buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean()
+                buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readInt(), buf.readInt()
         );
     }
 
@@ -77,7 +83,10 @@ public class SyncCyberwareS2C {
             state.cyberLeftArm = msg.cyberLeftArm;
             state.cyberRightLeg = msg.cyberRightLeg;
             state.cyberLeftLeg = msg.cyberLeftLeg;
+            state.eyeHeight = msg.eyeHeight;
+            state.eyeCount = msg.eyeCount;
             ClientCyberwareData.setState(msg.playerId, state);
+            System.out.println("Sent to client from server for " + msg.playerId + "- Height: " + state.eyeHeight + ", Count: " + state.eyeCount);
         });
         ctx.setPacketHandled(true);
     }

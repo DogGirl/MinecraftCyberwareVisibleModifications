@@ -3,7 +3,7 @@ loaderVersion="[47,)"
 license="Attribution-NonCommercial-ShareAlike 4.0 International"
 [[mods]]
 modId="cyberwareplus"
-version="1.3"
+version="1.5"
 displayName="Cyberware Plus"
 authors="msdoggirl"
 description="Addon to Cyberware: Reforged that adds overhauled aesthetics with high mod compatibility."
@@ -25,7 +25,7 @@ side="BOTH"
 [[dependencies.cyberwareplus]]
 modId="dglib"
 mandatory=true
-versionRange="[1.1_alpha,)"
+versionRange="[1.5_alpha,)"
 ordering="NONE"
 side="BOTH"
 

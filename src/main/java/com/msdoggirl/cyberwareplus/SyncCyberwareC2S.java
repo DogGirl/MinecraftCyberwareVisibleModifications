@@ -19,10 +19,12 @@ public class SyncCyberwareC2S {
     public final boolean cyberLeftArm;
     public final boolean cyberRightLeg;
     public final boolean cyberLeftLeg;
+    public final int eyeCount;
+    public final int eyeHeight;
 
     public SyncCyberwareC2S(boolean syntheticSkin, boolean cyberEye, boolean cyberHeart,
                             boolean humanRightArm, boolean humanLeftArm, boolean humanRightLeg, boolean humanLeftLeg,
-                            boolean cyberRightArm, boolean cyberLeftArm, boolean cyberRightLeg, boolean cyberLeftLeg) {
+                            boolean cyberRightArm, boolean cyberLeftArm, boolean cyberRightLeg, boolean cyberLeftLeg, int eyeCount, int eyeHeight) {
         this.syntheticSkin = syntheticSkin;
         this.cyberEye = cyberEye;
         this.cyberHeart = cyberHeart;
@@ -34,6 +36,8 @@ public class SyncCyberwareC2S {
         this.cyberLeftArm = cyberLeftArm;
         this.cyberRightLeg = cyberRightLeg;
         this.cyberLeftLeg = cyberLeftLeg;
+        this.eyeCount = eyeCount;
+        this.eyeHeight = eyeHeight;
     }
 
     public static void encode(SyncCyberwareC2S msg, FriendlyByteBuf buf) {
@@ -48,13 +52,15 @@ public class SyncCyberwareC2S {
         buf.writeBoolean(msg.cyberLeftArm);
         buf.writeBoolean(msg.cyberRightLeg);
         buf.writeBoolean(msg.cyberLeftLeg);
+        buf.writeInt(msg.eyeCount);
+        buf.writeInt(msg.eyeHeight);
     }
 
     public static SyncCyberwareC2S decode(FriendlyByteBuf buf) {
         return new SyncCyberwareC2S(
                 buf.readBoolean(), buf.readBoolean(), buf.readBoolean(),
                 buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(),
-                buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean()
+                buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readInt(), buf.readInt()
         );
     }
 
@@ -74,12 +80,16 @@ public class SyncCyberwareC2S {
             state.cyberLeftArm = msg.cyberLeftArm;
             state.cyberRightLeg = msg.cyberRightLeg;
             state.cyberLeftLeg = msg.cyberLeftLeg;
+            state.eyeCount = msg.eyeCount;
+            state.eyeHeight = msg.eyeHeight;
             ServerCyberwareData.get().setState(ctx.getSender().getUUID(), state);
+            System.out.println("Sent to server - Height: " + state.eyeHeight + ", Count: " + state.eyeCount);
             NetworkHandler.INSTANCE.send(PacketDistributor.TRACKING_ENTITY.with(() -> ctx.getSender()),
                     new SyncCyberwareS2C(ctx.getSender().getUUID(), state.syntheticSkin, state.cyberEye, state.cyberHeart,
                             state.humanRightArm, state.humanLeftArm, state.humanRightLeg, state.humanLeftLeg,
-                            state.cyberRightArm, state.cyberLeftArm, state.cyberRightLeg, state.cyberLeftLeg));
+                            state.cyberRightArm, state.cyberLeftArm, state.cyberRightLeg, state.cyberLeftLeg, state.eyeCount, state.eyeHeight));
         });
+
         ctx.setPacketHandled(true);
     }
 }

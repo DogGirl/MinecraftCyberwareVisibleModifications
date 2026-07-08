@@ -12,5 +12,5 @@ pluginManagement {
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.7.0"
 }
-rootProject.name = "seven_systems"
+rootProject.name = "cyberwareplus"
 include("forge")

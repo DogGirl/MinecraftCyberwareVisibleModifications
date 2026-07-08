@@ -3,6 +3,8 @@ package com.msdoggirl.cyberwareplus;
 
 import java.util.UUID;
 
+import com.msdoggirl.dglib.DGLib;
+import com.msdoggirl.dglib.network.GlowChangePacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -30,7 +32,7 @@ public class ServerEvents {
             NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getEntity()),
                     new SyncCyberwareS2C(target.getUUID(), state.syntheticSkin, state.cyberEye, state.cyberHeart,
                             state.humanRightArm, state.humanLeftArm, state.humanRightLeg, state.humanLeftLeg,
-                            state.cyberRightArm, state.cyberLeftArm, state.cyberRightLeg, state.cyberLeftLeg));
+                            state.cyberRightArm, state.cyberLeftArm, state.cyberRightLeg, state.cyberLeftLeg, state.eyeCount, state.eyeHeight));
         }
     }
 
@@ -58,10 +60,11 @@ public class ServerEvents {
                             uuid,
                             state.syntheticSkin, state.cyberEye, state.cyberHeart,
                             state.humanRightArm, state.humanLeftArm, state.humanRightLeg, state.humanLeftLeg,
-                            state.cyberRightArm, state.cyberLeftArm, state.cyberRightLeg, state.cyberLeftLeg
+                            state.cyberRightArm, state.cyberLeftArm, state.cyberRightLeg, state.cyberLeftLeg, state.eyeCount, state.eyeHeight
                         )
                     );
                 }
+
             }
 
 
@@ -73,7 +76,7 @@ public class ServerEvents {
                         newPlayer.getUUID(),
                         ownState.syntheticSkin, ownState.cyberEye, ownState.cyberHeart,
                         ownState.humanRightArm, ownState.humanLeftArm, ownState.humanRightLeg, ownState.humanLeftLeg,
-                        ownState.cyberRightArm, ownState.cyberLeftArm, ownState.cyberRightLeg, ownState.cyberLeftLeg
+                        ownState.cyberRightArm, ownState.cyberLeftArm, ownState.cyberRightLeg, ownState.cyberLeftLeg, ownState.eyeCount, ownState.eyeHeight
                     )
                 );
             }
